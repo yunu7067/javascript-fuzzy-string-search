@@ -1,0 +1,14 @@
+{
+	"name" : "javascript-fuzzy-string-search",
+	"description" : " 자바스크립트 퍼지 문자열 검색 ",
+	"author" : "yunu7067",
+    "license": "MIT",
+	"contributors" : [],
+	"dependencies" : {
+
+    },
+	"repository" : {"type": "git", "url" : "git://yunu7067/javascript-fuzzy-string-search.git"},
+    "scripts": {
+        
+    }
+}
