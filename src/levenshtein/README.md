@@ -1,6 +1,10 @@
 # Levenshtein
 # Algorithm
-$$lev(a,b) = {
+
+![levenshtein](./levenshtein.gif)
+
+
+$$[lev(a,b) = {
     \begin{cases} 
         |a| & \text{if } |b| = 0, \\ 
         |b| & \text{if } |a| = 0,\\ 
@@ -12,7 +16,7 @@ $$lev(a,b) = {
                     lev(tail(a), tail(b)) \\ 
                 \end{cases} & \text{otherwise.}
     \end{cases} 
-}$$
+}]$$
 
 1. if r != c일 경우:
     이전 값들 + 1을 해서 최솟값을 구하여 기입한다
