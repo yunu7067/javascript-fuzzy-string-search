@@ -9,12 +9,19 @@
 </head>
 
 <body>
+  <div>
+    <input type="radio" id="based_unicode" name="search_engine" value="based_unicode" checked>
+    <label for="based_unicode">Based unicode</label>
+
+  </div>
+
   <label>
     검색 :
-    <input type="search" id="search" name="search" onkeyup="search(this)" />
+    <input type="search" id="search" name="search" onkeyup="chatteredSearch(this)" />
   </label>
   <div>
-    <h5>결과</h5>
+    
+    <h5>결과 (<span id="spend-time"></span>)</h5>
     <ul id="result"></ul>
   </div>
   <script src="./based_unicode/based_unicode.js"></script>
@@ -181,41 +188,47 @@
 {"순위":160,"행정구역":"전라북도 장수군","지역":"호남권","행정구분":"기초단체","인구":"21,395"},
 {"순위":161,"행정구역":"경상북도 영양군","지역":"영남권","행정구분":"기초단체","인구":"16,579"},
 {"순위":162,"행정구역":"경상북도 울릉군","지역":"영남권","행정구분":"기초단체","인구":"8,702"}]`;
+
     const datas = JSON.parse(rawDatas);
-    //console.log(datas.length);
-
     const searchableDatas = datas.map((item) => new SearchableObject(item));
-    //console.log(searchableDatas.length);
 
-    let isRunning = false;
-    let haltFlag = false;
+    let previousText = "";
+    const timeoutIds = [];
+    function chatteredSearch(el) {
+      if(!el.value.replaceAll(" ", "") || previousText === el.value) return;
+      timeoutIds.forEach((id)=>{clearTimeout(id);});
+      timeoutIds.push(setTimeout(()=>{search(el)}, 350));
+      previousText = el.value;
+    }
 
     async function search(el) {
-      isRunning = true;
+      const startDate = new Date();
+
       const keyword = el.value;
-      if(!keyword.replaceAll(" ", "")) return;
-      
-      const res = [];
-      for await(const item of searchableDatas) {
-        (item.search(keyword)) && res.push(item);
-        if(haltFlag) {
-          haltFlag = isRunning = false;
-          break;
-        }
-      }
-      
+      const sortedDatas = searchableDatas
+        .map((item) =>  item.searchAndMarking(keyword, {before: "<mark>", after:"</mark>"}))
+        .filter((item)=> item !== false)
+        .sort((a, b) => a.compareWeight(b));
 
       const listEl = document.getElementById('result');
       const temp = document.querySelectorAll("#result > li");
-
+      
       temp.forEach(el => el.remove());
+      sortedDatas
+        .map((item) => {
+          const li = document.createElement('li');
+          const keys = Object.keys(item);
+          for(const key of keys) {
+            if(typeof item[key] === 'object' || typeof item[key] === "function") continue;
+            const value = item[key];
+            li.innerHTML += `${key} : ${value}<br/>`;
+          }
+          listEl.appendChild(li);
+        });
 
-      res.forEach((item) => {
-        const li = document.createElement('li');
-        li.textContent = JSON.stringify(item);
-
-        listEl.appendChild(li);
-      })
+        
+      const endDate = new Date();
+      document.getElementById('spend-time').textContent = `${(endDate - startDate) /1000}s`;
     }
 
   </script>
