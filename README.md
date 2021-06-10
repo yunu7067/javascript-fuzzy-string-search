@@ -7,7 +7,7 @@
 # index
 
  - [유니코드 기반](/src/based_unicode/based_unicode.js) ([출처](https://taegon.kim/archives/9919))
- - 레펜슈타인 거리(Levenshtein distance) (구현예정)
+ - [레펜슈타인 거리(Levenshtein distance)](/src/levenshtein/levenshtein.js)
  - 다메라우-레펜슈타인 거리(Damerau-Levenshtein) (구현예정)
  - N-그램(N-grams) (구현예정)
  - Q-grams (구현예정)
